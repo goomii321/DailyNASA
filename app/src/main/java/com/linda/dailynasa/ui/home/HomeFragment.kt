@@ -1,4 +1,4 @@
-package com.eki.dailynasa.ui.home
+package com.linda.dailynasa.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.eki.dailynasa.databinding.FragmentHomeBinding
+import com.linda.dailynasa.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 

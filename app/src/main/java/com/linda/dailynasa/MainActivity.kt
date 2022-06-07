@@ -1,4 +1,4 @@
-package com.eki.dailynasa
+package com.linda.dailynasa
 
 import android.os.Bundle
 import android.view.Menu
@@ -11,7 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.eki.dailynasa.databinding.ActivityMainBinding
+import com.linda.dailynasa.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

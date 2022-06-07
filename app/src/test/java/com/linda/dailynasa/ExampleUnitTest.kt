@@ -1,4 +1,4 @@
-package com.eki.dailynasa
+package com.linda.dailynasa
 
 import org.junit.Test
 
