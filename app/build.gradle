@@ -7,6 +7,10 @@ plugins {
     id 'androidx.navigation.safeargs'
 }
 
+def apikeyPropertiesFile = rootProject.file("apikey.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
 android {
     compileSdk 32
 
@@ -25,11 +29,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField("Boolean", "LOGGER_VISIABLE", "false")
-            buildConfigField("Boolean", "VERSION_FORMAL", "true")
+            buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
         }
         debug {
             buildConfigField("Boolean", "LOGGER_VISIABLE", "true")
-            buildConfigField("Boolean", "VERSION_FORMAL", "false")
+            buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
         }
     }
     compileOptions {
