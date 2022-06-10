@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    val repository: DailyNasaRepository
+    private val repository: DailyNasaRepository
 ) : ViewModel() {
 
     private val viewModelJob = Job()
@@ -35,7 +35,7 @@ class HomeViewModel @Inject constructor(
                         }
                         is Resource.Error -> {
                             Logger.e("error = ${result.message}")
-                            _errorMsg.value = result.message ?: "unknown error"
+                            _errorMsg.postValue(result.message ?: "unknown error")
                         }
                         is Resource.Loading -> {}
                     }

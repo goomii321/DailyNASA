@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.linda.dailynasa.R
 import com.linda.dailynasa.databinding.FragmentApodBinding
+import com.linda.dailynasa.ui.dialog.MessageDialog
 import com.linda.dailynasa.ui.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,8 +23,36 @@ class ApodFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentApodBinding.inflate(inflater,container,false)
+        setListener()
+        setObserver()
         viewModel.getApod("")
         return binding.root
     }
 
+    private fun setListener() {
+
+    }
+
+    private fun setObserver() {
+        viewModel.errorMsg.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it.isBlank()) {
+                    setErrorDialog("unknown error")
+                    return@observe
+                }
+                setErrorDialog(it)
+            }
+        }
+    }
+
+    private fun setErrorDialog(msg:String) {
+        val rightListener = View.OnClickListener {
+            MessageDialog.dialog?.dismiss()
+        }
+        MessageDialog(requireContext()).apply {
+            message = msg
+            leftButtonState = null
+            rightButtonState = getString(R.string.confirm)
+        }.setCustomDialog(null,rightListener)
+    }
 }

@@ -40,7 +40,7 @@ class DailyNasaRepositoryImpl @Inject constructor(
                         val mError = gson.fromJson(
                             it.string(), ErrorBody::class.java
                         )
-                        emit(Resource.Error(mError.code.toString() ?: "null"))
+                        emit(Resource.Error(mError.msg.toString() ?: "null"))
                     }
                 }
             } catch (e:HttpException) {
