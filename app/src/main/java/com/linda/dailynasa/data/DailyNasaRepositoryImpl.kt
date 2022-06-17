@@ -6,6 +6,7 @@ import com.linda.dailynasa.common.Resource
 import com.linda.dailynasa.data.local.NasaDao
 import com.linda.dailynasa.data.remote.NasaApi
 import com.linda.dailynasa.data.remote.dto.ApodDto
+import com.linda.dailynasa.data.remote.dto.MarsRover
 import com.linda.dailynasa.data.remote.error_body.ErrorBody
 import com.linda.dailynasa.domain.DailyNasaRepository
 import kotlinx.coroutines.flow.Flow
@@ -48,7 +49,24 @@ class DailyNasaRepositoryImpl @Inject constructor(
             } catch (e:IOException) {
                 emit(Resource.Error(e.message ?: "Internet error"))
             }
+        }
+    }
 
+    override suspend fun getMarsRoverData(camera:String,page: Int): Flow<Resource<MarsRover>> {
+        return flow {
+            emit(Resource.Loading())
+
+            try {
+                val response = api.getMarsRoverData(camera,key, 1000,page)
+
+                if (response.body() != null) {
+                    emit(Resource.Success(response.body()!!))
+                } else {
+                    emit(Resource.Error("no data"))
+                }
+            } catch (e:HttpException) {
+                emit(Resource.Error(e.message.toString()))
+            }
         }
     }
 }

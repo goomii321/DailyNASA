@@ -29,7 +29,8 @@ class HomeViewModel @Inject constructor(
     val errorMsg:LiveData<String> = _errorMsg
 
     init {
-        getApod("")
+//        getApod("")
+        getMarsRover(CameraType.Curiosity.name,1)
     }
 
     fun getApod(input:String?) {
@@ -51,4 +52,24 @@ class HomeViewModel @Inject constructor(
                 }
         }
     }
+
+    fun getMarsRover(camera:String,page:Int) {
+        coroutineScope.launch {
+            repository.getMarsRoverData(camera,page).collect{ result ->
+                when (result) {
+                    is Resource.Success -> {
+                        Logger.v("mars result = ${result.data}")
+                    }
+                    is Resource.Error -> {
+                        Logger.e("mars error = ${result.message}")
+                    }
+                    is Resource.Loading -> {}
+                }
+            }
+        }
+    }
+}
+
+enum class CameraType() {
+    Curiosity,Opportunity,Spirit
 }
