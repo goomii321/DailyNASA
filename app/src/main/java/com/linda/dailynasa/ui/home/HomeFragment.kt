@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.linda.dailynasa.R
+import com.linda.dailynasa.common.Logger
 import com.linda.dailynasa.databinding.FragmentHomeBinding
 import com.linda.dailynasa.ui.home.adapter.HomeViewPagerAdapter
 import com.linda.dailynasa.ui.home.child.ApodFragment
@@ -46,6 +47,20 @@ class HomeFragment : Fragment() {
     }
 
     private fun setObserver() {
+        viewModel.loading.observe(viewLifecycleOwner) {
+            it?.let {
+                setLoading(it)
+            }
+        }
+    }
 
+    private fun setLoading(isShow:Boolean) {
+        if (isShow) {
+            binding.loadView.visibility = View.VISIBLE
+            binding.apodProgressBar.visibility = View.VISIBLE
+        } else {
+            binding.loadView.visibility = View.GONE
+            binding.apodProgressBar.visibility = View.GONE
+        }
     }
 }

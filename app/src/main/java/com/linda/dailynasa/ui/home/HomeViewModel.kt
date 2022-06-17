@@ -28,9 +28,15 @@ class HomeViewModel @Inject constructor(
     private val _errorMsg = MutableLiveData<String>()
     val errorMsg:LiveData<String> = _errorMsg
 
+    private val _loading = MutableLiveData<Boolean>()
+    val loading:LiveData<Boolean> = _loading
+
     init {
-//        getApod("")
-        getMarsRover(CameraType.Curiosity.name,1)
+        showLoading(true)
+    }
+
+    fun showLoading(isShow:Boolean) {
+        _loading.value = isShow
     }
 
     fun getApod(input:String?) {
@@ -47,7 +53,9 @@ class HomeViewModel @Inject constructor(
                             Logger.e("error = ${result.message}")
                             _errorMsg.postValue(result.message ?: "unknown error")
                         }
-                        is Resource.Loading -> {}
+                        is Resource.Loading -> {
+                            _loading.postValue(true)
+                        }
                     }
                 }
         }
@@ -63,7 +71,9 @@ class HomeViewModel @Inject constructor(
                     is Resource.Error -> {
                         Logger.e("mars error = ${result.message}")
                     }
-                    is Resource.Loading -> {}
+                    is Resource.Loading -> {
+                        _loading.postValue(true)
+                    }
                 }
             }
         }

@@ -25,16 +25,18 @@ import dagger.hilt.android.AndroidEntryPoint
 class ApodFragment : Fragment() {
 
     private lateinit var binding:FragmentApodBinding
-    private val viewModel by viewModels<HomeViewModel>()
+    private val viewModel by viewModels<HomeViewModel>({requireParentFragment()})
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentApodBinding.inflate(inflater,container,false)
+
+        viewModel.getApod("")
+
         setListener()
         setObserver()
-        binding.loadView.visibility = View.VISIBLE
         return binding.root
     }
 
@@ -45,7 +47,9 @@ class ApodFragment : Fragment() {
     private fun setObserver() {
         viewModel.apodData.observe(viewLifecycleOwner) {
             it?.let {
-                setApod(it)
+                setApodImage(it.url)
+                setApodInfo(it)
+                viewModel.showLoading(false)
             }
         }
         viewModel.errorMsg.observe(viewLifecycleOwner) {
@@ -55,14 +59,15 @@ class ApodFragment : Fragment() {
                     return@observe
                 }
                 setErrorDialog(it)
+                viewModel.showLoading(false)
             }
         }
     }
 
-    private fun setApod(data:ApodDto) {
-        binding.loadView.visibility = View.VISIBLE
+    private fun setApodImage(url:String) {
+        viewModel.showLoading(true)
         binding.apodImg.let {
-            val uri = data.url.toUri().buildUpon().build()
+            val uri = url.toUri().buildUpon().build()
             Glide.with(it.context)
                 .load(uri)
                 .listener(object : RequestListener<Drawable>{
@@ -72,7 +77,7 @@ class ApodFragment : Fragment() {
                         target: Target<Drawable>?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        binding.loadView.visibility = View.GONE
+                        viewModel.showLoading(false)
                         return false
                     }
 
@@ -83,7 +88,7 @@ class ApodFragment : Fragment() {
                         dataSource: DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        binding.loadView.visibility = View.GONE
+                        viewModel.showLoading(false)
                         return false
                     }
                 })
@@ -94,7 +99,13 @@ class ApodFragment : Fragment() {
                 )
                 .into(it)
         }
+    }
+
+    private fun setApodInfo(data:ApodDto) {
+        binding.apodTitleText.text = data.title
+        binding.apodDateText.text = data.date
         binding.explanationText.text = data.explanation
+        binding.apodCopyrightText.text = getString(R.string.copyright) + data.copyright
     }
 
     private fun setErrorDialog(msg:String) {

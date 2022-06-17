@@ -19,4 +19,7 @@
     <string name="apod">Astronomy Picture of the Day</string>
     <string name="mars_rover">Mars Rover</string>
     <string name="confirm">Confirm</string>
+    <string name="date">Date</string>
+
+    <string name="copyright" translatable="false">©</string>
 </resources>
