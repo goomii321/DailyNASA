@@ -52,7 +52,7 @@ class ApodFragment : Fragment() {
                 viewModel.showLoading(false)
             }
         }
-        viewModel.errorMsg.observe(viewLifecycleOwner) {
+        viewModel.apodErrorMsg.observe(viewLifecycleOwner) {
             it?.let {
                 if (it.isBlank()) {
                     setErrorDialog("unknown error")
