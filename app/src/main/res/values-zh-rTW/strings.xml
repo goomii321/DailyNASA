@@ -23,4 +23,8 @@
 
     <string name="confirm">確定</string>
     <string name="date">日期</string>
+
+    <string name="Curiosity">好奇號</string>
+    <string name="Opportunity">機遇號</string>
+    <string name="Spirit">勇氣號</string>
 </resources>

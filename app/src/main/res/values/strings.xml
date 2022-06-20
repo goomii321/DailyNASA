@@ -22,4 +22,8 @@
     <string name="date">Date</string>
 
     <string name="copyright" translatable="false">©</string>
+
+    <string name="Curiosity">Curiosity</string>
+    <string name="Opportunity">Opportunity</string>
+    <string name="Spirit">Spirit</string>
 </resources>
