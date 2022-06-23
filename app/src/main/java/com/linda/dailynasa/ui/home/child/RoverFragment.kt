@@ -14,6 +14,7 @@ import com.linda.dailynasa.R
 import com.linda.dailynasa.common.Logger
 import com.linda.dailynasa.databinding.FragmentRoverBinding
 import com.linda.dailynasa.ui.home.HomeViewModel
+import com.linda.dailynasa.ui.home.adapter.RoverAdapter
 
 
 class RoverFragment : Fragment() {
@@ -23,6 +24,7 @@ class RoverFragment : Fragment() {
 
     private val roverList = listOf<String>("Curiosity","Opportunity","Spirit")
     private var spinnerList = listOf<String>()
+    private lateinit var roverAdapter: RoverAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,12 +60,17 @@ class RoverFragment : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+
+        roverAdapter = RoverAdapter(viewModel)
+        binding.roverRecyclerView.adapter = roverAdapter
+
     }
 
     private fun setObserver() {
         viewModel.roverData.observe(viewLifecycleOwner) {
             it?.let {
-                Logger.v("roverData $it")
+                Logger.v("roverData ${it.size}  $it")
+                roverAdapter.submitList(it)
                 viewModel.showLoading(false)
             }
         }
