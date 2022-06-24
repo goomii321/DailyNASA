@@ -3,6 +3,9 @@ package com.linda.dailynasa.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.linda.dailynasa.common.Logger
 import com.linda.dailynasa.common.Resource
 import com.linda.dailynasa.data.remote.dto.ApodDto
@@ -12,6 +15,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,8 +31,10 @@ class HomeViewModel @Inject constructor(
     private val _apodData = MutableLiveData<ApodDto?>()
     val apodData:LiveData<ApodDto?> = _apodData
 
-    private val _roverData = MutableLiveData<List<Photo>?>()
-    val roverData:LiveData<List<Photo>?> = _roverData
+//    private val _roverData = MutableLiveData<List<Photo>?>()
+//    val roverData:LiveData<List<Photo>?> = _roverData
+
+    val roverData: Flow<PagingData<Photo>> = flow {  }
 
     private val _apodErrorMsg = MutableLiveData<String>()
     val apodErrorMsg:LiveData<String> = _apodErrorMsg
@@ -75,7 +82,7 @@ class HomeViewModel @Inject constructor(
                 when (result) {
                     is Resource.Success -> {
 //                        Logger.v("mars result = ${result.data}")
-                        _roverData.postValue(result.data?.photos)
+//                        _roverData.postValue(result.data?.photos)
                     }
                     is Resource.Error -> {
 //                        Logger.e("mars error = ${result.message}")
@@ -87,5 +94,9 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getMarsRover2(camera: String): Flow<PagingData<Photo>> {
+        return repository.getMarsRoverData2(camera).cachedIn(viewModelScope)
     }
 }
