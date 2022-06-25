@@ -13,6 +13,7 @@ import com.linda.dailynasa.data.remote.dto.MarsRover
 import com.linda.dailynasa.data.remote.dto.Photo
 import com.linda.dailynasa.data.remote.error_body.ErrorBody
 import com.linda.dailynasa.domain.DailyNasaRepository
+import com.linda.dailynasa.domain.model.Favorite
 import com.linda.dailynasa.ui.home.paging.RoverPagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -55,6 +56,22 @@ class DailyNasaRepositoryImpl @Inject constructor(
                 emit(Resource.Error(e.message ?: "Internet error"))
             }
         }
+    }
+
+    override suspend fun insertFavorite(data: Favorite) {
+        if (localDatabase.getFavoriteByCondition(data.type,data.date) != null) {
+            return localDatabase.updateFavorite(data)
+        } else {
+            return localDatabase.insertFavorite(data)
+        }
+    }
+
+    override suspend fun getFavorite(type: String, date: String): Favorite? {
+        return localDatabase.getFavoriteByCondition(type, date)
+    }
+
+    override suspend fun removeFavorite(id: Int) {
+        return localDatabase.removeFavorite(id)
     }
 
     override suspend fun getMarsRoverData(camera:String,page: Int): Flow<Resource<MarsRover>> {

@@ -15,8 +15,10 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.linda.dailynasa.R
+import com.linda.dailynasa.common.Constants
 import com.linda.dailynasa.data.remote.dto.ApodDto
 import com.linda.dailynasa.databinding.FragmentApodBinding
+import com.linda.dailynasa.domain.model.Favorite
 import com.linda.dailynasa.ui.dialog.MessageDialog
 import com.linda.dailynasa.ui.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +43,17 @@ class ApodFragment : Fragment() {
     }
 
     private fun setListener() {
-
+        binding.addFavoriteButton.setOnClickListener { view ->
+            viewModel.apodData.value?.let {
+                if (!view.isSelected) {
+                    addFavorite(it)
+                } else {
+                    viewModel.apodFavorite.value?.let { favorite ->
+                        viewModel.removeFavorite(favorite.id!!)
+                    }
+                }
+            }
+        }
     }
 
     private fun setObserver() {
@@ -49,6 +61,7 @@ class ApodFragment : Fragment() {
             it?.let {
                 setApodImage(it.url)
                 setApodInfo(it)
+                viewModel.checkFavorite(Constants.APOD,it.date)
                 viewModel.showLoading(false)
             }
         }
@@ -60,6 +73,15 @@ class ApodFragment : Fragment() {
                 }
                 setErrorDialog(it)
                 viewModel.showLoading(false)
+            }
+        }
+        viewModel.apodFavorite.observe(viewLifecycleOwner) {
+            binding.addFavoriteButton.isSelected = it != null
+        }
+        viewModel.apodCheckFavorite.observe(viewLifecycleOwner) {
+            if (it == true) {
+                viewModel.checkFavorite(Constants.APOD,viewModel.apodData.value!!.date)
+                viewModel.apodCheckFavorite.value = null
             }
         }
     }
@@ -106,6 +128,19 @@ class ApodFragment : Fragment() {
         binding.apodDateText.text = data.date
         binding.explanationText.text = data.explanation
         binding.apodCopyrightText.text = getString(R.string.copyright) + data.copyright
+    }
+
+    private fun addFavorite(data: ApodDto) {
+        val favorite =
+            Favorite(null,
+                data.url,
+                data.title,
+                data.explanation,
+                null,
+                Constants.APOD,
+                data.date)
+
+        viewModel.insertFavorite(favorite)
     }
 
     private fun setErrorDialog(msg:String) {

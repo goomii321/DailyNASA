@@ -6,17 +6,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.linda.dailynasa.common.Logger
 import com.linda.dailynasa.common.Resource
 import com.linda.dailynasa.data.remote.dto.ApodDto
 import com.linda.dailynasa.data.remote.dto.Photo
 import com.linda.dailynasa.domain.DailyNasaRepository
+import com.linda.dailynasa.domain.model.Favorite
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,7 +33,10 @@ class HomeViewModel @Inject constructor(
 //    private val _roverData = MutableLiveData<List<Photo>?>()
 //    val roverData:LiveData<List<Photo>?> = _roverData
 
-    val roverData: Flow<PagingData<Photo>> = flow {  }
+    private val _apodFavorite = MutableLiveData<Favorite>()
+    val apodFavorite: LiveData<Favorite> = _apodFavorite
+
+    val apodCheckFavorite = MutableLiveData<Boolean>()
 
     private val _apodErrorMsg = MutableLiveData<String>()
     val apodErrorMsg:LiveData<String> = _apodErrorMsg
@@ -76,7 +78,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getMarsRover(camera:String,page:Int) {
-        Logger.e("camera = $camera")
         coroutineScope.launch {
             repository.getMarsRoverData(camera,page).collect{ result ->
                 when (result) {
@@ -98,5 +99,25 @@ class HomeViewModel @Inject constructor(
 
     fun getMarsRover2(camera: String): Flow<PagingData<Photo>> {
         return repository.getMarsRoverData2(camera).cachedIn(viewModelScope)
+    }
+
+    fun checkFavorite(type:String,date:String) {
+        coroutineScope.launch {
+            _apodFavorite.postValue(repository.getFavorite(type, date))
+        }
+    }
+
+    fun insertFavorite(favorite: Favorite) {
+        coroutineScope.launch {
+            repository.insertFavorite(favorite)
+            apodCheckFavorite.postValue(true)
+        }
+    }
+
+    fun removeFavorite(id:Int) {
+        coroutineScope.launch {
+            repository.removeFavorite(id)
+            apodCheckFavorite.postValue(true)
+        }
     }
 }
