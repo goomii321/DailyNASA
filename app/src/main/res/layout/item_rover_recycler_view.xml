@@ -20,11 +20,11 @@
 
             <ImageView
                 android:id="@+id/rover_image"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:layout_margin="8dp"
+                android:scaleType="fitXY"
+                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/rover_earth_date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

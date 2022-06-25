@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="end"
-        app:constraint_referenced_ids="rover_name_title,camera_title"/>
+        app:constraint_referenced_ids="rover_name_title,date_title,launch_date_title,landing_date_title,camera_title"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/divider"
