@@ -2,6 +2,7 @@ package com.linda.dailynasa.ui
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -54,9 +55,15 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.nav_host_fragment_content_main).addOnDestinationChangedListener {
                 navController: NavController, _: NavDestination, _: Bundle? ->
             when (navController.currentDestination?.id) {
-                R.id.nav_home -> {}
+                R.id.nav_home -> {
+                    showToolbar(true)
+                }
                 R.id.nav_gallery -> {}
-                R.id.nav_slideshow -> {}
+                R.id.nav_slideshow -> {
+                }
+                R.id.roverDetailFragment -> {
+                    showToolbar(false)
+                }
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)
 
@@ -69,6 +76,14 @@ class MainActivity : AppCompatActivity() {
 //                R.id.templateFragment -> CurrentFragmentType.TEMPLATE
 //                else -> viewModel.currentFragmentType.value
 //            }
+        }
+    }
+
+    fun showToolbar(isShow:Boolean) {
+        binding.appBarMain.toolbar.visibility = if (isShow) {
+            View.VISIBLE
+        } else {
+            View.GONE
         }
     }
 
