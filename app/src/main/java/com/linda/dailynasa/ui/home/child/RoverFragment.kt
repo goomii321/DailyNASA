@@ -9,9 +9,12 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.linda.dailynasa.MobileNavigationDirections
 import com.linda.dailynasa.R
 import com.linda.dailynasa.common.Logger
+import com.linda.dailynasa.data.remote.dto.Photo
 import com.linda.dailynasa.databinding.FragmentRoverBinding
 import com.linda.dailynasa.ui.home.HomeViewModel
 import com.linda.dailynasa.ui.home.adapter.RoverPagingAdapter
@@ -37,7 +40,6 @@ class RoverFragment : Fragment() {
         setListener()
         setObserver()
 
-//        viewModel.getMarsRover(roverList[0],1)
         viewModel.showLoading(true)
 
         return binding.root
@@ -70,13 +72,14 @@ class RoverFragment : Fragment() {
         }
 
 //        roverAdapter = RoverAdapter(viewModel)
-        roverAdapter = RoverPagingAdapter()
+        roverAdapter = RoverPagingAdapter(RoverPagingAdapter.OnClickListener{
+            toDetail(it)
+        })
         binding.roverRecyclerView.adapter = roverAdapter
 
         roverAdapter.addLoadStateListener {
             when (it.refresh) {
                 is LoadState.NotLoading -> {
-                    Logger.v("NotLoading NotLoading NotLoading")
                     viewModel.showLoading(false)
                 }
                 is LoadState.Error -> {
@@ -84,7 +87,6 @@ class RoverFragment : Fragment() {
                     viewModel.showLoading(false)
                 }
                 is LoadState.Loading -> {
-                    Logger.v("Loading Loading Loading")
                     viewModel.showLoading(true)
                 }
             }
@@ -108,5 +110,9 @@ class RoverFragment : Fragment() {
                 roverAdapter.submitData(it)
             }
         }
+    }
+
+    private fun toDetail(data:Photo) {
+        findNavController().navigate(MobileNavigationDirections.toRoverDetailPage(data))
     }
 }

@@ -31,4 +31,16 @@
     <action
         android:id="@+id/to_slideshow_page"
         app:destination="@+id/nav_slideshow" />
+    <fragment
+        android:id="@+id/roverDetailFragment"
+        android:name="com.linda.dailynasa.ui.home.child.RoverDetailFragment"
+        android:label="fragment_rover_detail"
+        tools:layout="@layout/fragment_rover_detail">
+        <argument
+            android:name="rover_args"
+            app:argType="com.linda.dailynasa.data.remote.dto.Photo" />
+    </fragment>
+    <action
+        android:id="@+id/to_rover_detail_page"
+        app:destination="@+id/roverDetailFragment" />
 </navigation>

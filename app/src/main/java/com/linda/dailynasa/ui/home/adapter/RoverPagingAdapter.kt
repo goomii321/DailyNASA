@@ -12,11 +12,16 @@ import com.linda.dailynasa.R
 import com.linda.dailynasa.data.remote.dto.Photo
 import com.linda.dailynasa.databinding.ItemRoverRecyclerViewBinding
 
-class RoverPagingAdapter() :
+class RoverPagingAdapter(private val onClickListener:OnClickListener) :
     PagingDataAdapter<Photo, RoverPagingAdapter.RoverViewHolder>(DiffCallback()) {
+
+    class OnClickListener(private val clickListener: (data:Photo) -> Unit) {
+        fun onClick(data: Photo) = clickListener(data)
+    }
 
     inner class RoverViewHolder(
         private val binding: ItemRoverRecyclerViewBinding,
+        private val clickListener: OnClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(photo: Photo) {
             binding.roverEarthDate.text = photo.earth_date
@@ -31,6 +36,9 @@ class RoverPagingAdapter() :
                     ).into(it)
             }
 
+            binding.root.setOnClickListener {
+                clickListener.onClick(photo)
+            }
             binding.executePendingBindings()
         }
     }
@@ -39,7 +47,7 @@ class RoverPagingAdapter() :
         return RoverViewHolder(
             ItemRoverRecyclerViewBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
-            )
+            ),onClickListener
         )
     }
 

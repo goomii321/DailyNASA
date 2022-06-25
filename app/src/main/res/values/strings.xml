@@ -26,4 +26,8 @@
     <string name="Curiosity">Curiosity</string>
     <string name="Opportunity">Opportunity</string>
     <string name="Spirit">Spirit</string>
+    <string name="camera">Camera</string>
+    <string name="rover_name">Rover name</string>
+    <string name="launch_date">Launch date</string>
+    <string name="landing_date">Landing date</string>
 </resources>

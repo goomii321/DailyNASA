@@ -27,4 +27,9 @@
     <string name="Curiosity">好奇號</string>
     <string name="Opportunity">機遇號</string>
     <string name="Spirit">勇氣號</string>
+
+    <string name="camera">相機類型</string>
+    <string name="rover_name">漫遊者名稱</string>
+    <string name="launch_date">發射日期</string>
+    <string name="landing_date">著陸日期</string>
 </resources>
