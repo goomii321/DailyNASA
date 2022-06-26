@@ -4,39 +4,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import com.linda.dailynasa.common.Logger
 import com.linda.dailynasa.databinding.FragmentGalleryBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class GalleryFragment : Fragment() {
 
-    private var _binding: FragmentGalleryBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentGalleryBinding
+    private val viewModel by viewModels<GalleryViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val galleryViewModel =
-            ViewModelProvider(this).get(GalleryViewModel::class.java)
+        binding = FragmentGalleryBinding.inflate(inflater, container, false)
 
-        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textGallery
-        galleryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        viewModel.favoriteData.observe(viewLifecycleOwner) {
+            it?.let {
+                Logger.d("favoriteData = $it")
+            }
         }
-        return root
+
+        return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

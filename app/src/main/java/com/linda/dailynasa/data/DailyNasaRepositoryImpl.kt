@@ -70,6 +70,10 @@ class DailyNasaRepositoryImpl @Inject constructor(
         return localDatabase.getFavoriteByCondition(type, date)
     }
 
+    override fun getAllFavorite(): Flow<List<Favorite>> {
+        return localDatabase.getFavorite()
+    }
+
     override suspend fun removeFavorite(id: Int) {
         return localDatabase.removeFavorite(id)
     }
