@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.linda.dailynasa.MobileNavigationDirections
 import com.linda.dailynasa.common.Logger
 import com.linda.dailynasa.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +26,9 @@ class GalleryFragment : Fragment() {
     ): View {
         binding = FragmentGalleryBinding.inflate(inflater, container, false)
 
-        galleryAdapter = GalleryAdapter(viewModel)
+        galleryAdapter = GalleryAdapter(GalleryAdapter.OnClickListener {
+            findNavController().navigate(MobileNavigationDirections.toGalleryDetailPage(it))
+        })
         binding.galleryRecyclerView.adapter = galleryAdapter
         binding.galleryRecyclerView.setHasFixedSize(true)
 

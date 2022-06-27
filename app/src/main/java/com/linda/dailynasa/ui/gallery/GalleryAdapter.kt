@@ -12,8 +12,12 @@ import com.linda.dailynasa.R
 import com.linda.dailynasa.databinding.ItemGalleryRecyclerViewBinding
 import com.linda.dailynasa.domain.model.Favorite
 
-class GalleryAdapter(private val viewModel: GalleryViewModel) :
+class GalleryAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<Favorite, GalleryAdapter.GalleryViewHolder>(DiffCallback()) {
+
+    class OnClickListener(private val clickListener: (data: Favorite) -> Unit) {
+        fun onClick(data: Favorite) = clickListener(data)
+    }
 
     class DiffCallback : DiffUtil.ItemCallback<Favorite>() {
         override fun areItemsTheSame(oldItem: Favorite, newItem: Favorite): Boolean {
@@ -28,7 +32,7 @@ class GalleryAdapter(private val viewModel: GalleryViewModel) :
 
     inner class GalleryViewHolder(
         private val binding: ItemGalleryRecyclerViewBinding,
-        private val viewModel: GalleryViewModel
+        private val onClickListener: OnClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: Favorite) {
             binding.galleryNameText.text = data.name
@@ -40,9 +44,12 @@ class GalleryAdapter(private val viewModel: GalleryViewModel) :
                         RequestOptions()
                             .placeholder(R.drawable.refresh_48px)
                             .error(R.drawable.broken_image_48px)
-                    ).into(it)
+                    ).dontTransform().into(it)
             }
 
+            binding.root.setOnClickListener {
+                onClickListener.onClick(data)
+            }
             binding.executePendingBindings()
         }
     }
@@ -53,7 +60,7 @@ class GalleryAdapter(private val viewModel: GalleryViewModel) :
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            ), viewModel
+            ), onClickListener
         )
     }
 

@@ -34,4 +34,16 @@
     <action
         android:id="@+id/to_rover_detail_page"
         app:destination="@+id/roverDetailFragment" />
+    <fragment
+        android:id="@+id/galleryDetailFragment"
+        android:name="com.linda.dailynasa.ui.gallery.GalleryDetailFragment"
+        android:label="fragment_gallery_detail"
+        tools:layout="@layout/fragment_gallery_detail" >
+        <argument
+            android:name="favorite_args"
+            app:argType="com.linda.dailynasa.domain.model.Favorite" />
+    </fragment>
+    <action
+        android:id="@+id/to_gallery_detail_page"
+        app:destination="@+id/galleryDetailFragment" />
 </navigation>
