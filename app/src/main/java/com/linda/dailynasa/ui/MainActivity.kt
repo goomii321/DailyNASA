@@ -3,6 +3,7 @@ package com.linda.dailynasa.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -13,6 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import com.linda.dailynasa.R
+import com.linda.dailynasa.common.CurrentFragmentType
 import com.linda.dailynasa.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private val viewModel by viewModels<MainViewModel>()
 
     private lateinit var mDrawerToggle:ActionBarDrawerToggle
 
@@ -33,6 +36,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarMain.toolbar)
         setDrawer()
         setupNavController()
+
+        viewModel.currentFragmentType.observe(this) {
+            it?.let {
+                binding.appBarMain.toolbar.title = it.value
+            }
+        }
     }
 
     private fun setDrawer() {
@@ -49,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.drawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerToggle.syncState()
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     private fun setupNavController() {
@@ -57,29 +67,21 @@ class MainActivity : AppCompatActivity() {
             when (navController.currentDestination?.id) {
                 R.id.nav_home -> {
                     showToolbar(true)
+                    viewModel.currentFragmentType.value = CurrentFragmentType.HOME
                 }
-                R.id.nav_gallery -> {}
-                R.id.nav_slideshow -> {
+                R.id.nav_gallery -> {
+                    showToolbar(true)
+                    viewModel.currentFragmentType.value = CurrentFragmentType.GALLERY
                 }
-                R.id.roverDetailFragment -> {
+                R.id.roverDetailFragment,R.id.galleryDetailFragment -> {
                     showToolbar(false)
                 }
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)
-
-//            viewModel.currentFragmentType.value = when (navController.currentDestination?.id) {
-//                R.id.homeFragment -> CurrentFragmentType.HOME
-//                R.id.diariesFragment -> CurrentFragmentType.DIARY
-//                R.id.storesFragment -> CurrentFragmentType.STORES
-//                R.id.profileFragment -> CurrentFragmentType.PROFILE
-//                R.id.addDiaryFragment -> CurrentFragmentType.ADD
-//                R.id.templateFragment -> CurrentFragmentType.TEMPLATE
-//                else -> viewModel.currentFragmentType.value
-//            }
         }
     }
 
-    fun showToolbar(isShow:Boolean) {
+    private fun showToolbar(isShow:Boolean) {
         binding.appBarMain.toolbar.visibility = if (isShow) {
             View.VISIBLE
         } else {
