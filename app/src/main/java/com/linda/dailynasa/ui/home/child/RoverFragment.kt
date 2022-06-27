@@ -72,10 +72,11 @@ class RoverFragment : Fragment() {
         }
 
 //        roverAdapter = RoverAdapter(viewModel)
-        roverAdapter = RoverPagingAdapter(RoverPagingAdapter.OnClickListener{
+        roverAdapter = RoverPagingAdapter(requireContext(),RoverPagingAdapter.OnClickListener{
             toDetail(it)
         })
         binding.roverRecyclerView.adapter = roverAdapter
+        binding.roverRecyclerView.setHasFixedSize(true)
 
         roverAdapter.addLoadStateListener {
             when (it.refresh) {

@@ -1,7 +1,12 @@
 package com.linda.dailynasa.ui.home.adapter
 
+import android.app.Activity
+import android.content.Context
+import android.os.Build
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.core.net.toUri
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -12,7 +17,8 @@ import com.linda.dailynasa.R
 import com.linda.dailynasa.data.remote.dto.Photo
 import com.linda.dailynasa.databinding.ItemRoverRecyclerViewBinding
 
-class RoverPagingAdapter(private val onClickListener:OnClickListener) :
+
+class RoverPagingAdapter(val context:Context,private val onClickListener:OnClickListener) :
     PagingDataAdapter<Photo, RoverPagingAdapter.RoverViewHolder>(DiffCallback()) {
 
     class OnClickListener(private val clickListener: (data:Photo) -> Unit) {
@@ -23,6 +29,7 @@ class RoverPagingAdapter(private val onClickListener:OnClickListener) :
         private val binding: ItemRoverRecyclerViewBinding,
         private val clickListener: OnClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
+        val image = binding.roverImage
         fun bind(photo: Photo) {
             binding.roverEarthDate.text = photo.earth_date
 
@@ -55,6 +62,20 @@ class RoverPagingAdapter(private val onClickListener:OnClickListener) :
         val repoItem = getItem(position)
         if (repoItem != null) {
             holder.bind(repoItem)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+                val devicewidth = wm.currentWindowMetrics.bounds.width() / 2
+                holder.image.layoutParams.width = devicewidth
+            } else {
+                val displaymetrics = DisplayMetrics()
+                (context as Activity).windowManager.defaultDisplay.getMetrics(displaymetrics)
+                val devicewidth = displaymetrics.widthPixels / 2
+
+                holder.image.layoutParams.width = devicewidth
+
+            }
+
         }
     }
 
