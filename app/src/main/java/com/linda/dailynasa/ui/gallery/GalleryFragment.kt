@@ -15,6 +15,7 @@ class GalleryFragment : Fragment() {
 
     private lateinit var binding: FragmentGalleryBinding
     private val viewModel by viewModels<GalleryViewModel>()
+    private lateinit var galleryAdapter:GalleryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,9 +24,14 @@ class GalleryFragment : Fragment() {
     ): View {
         binding = FragmentGalleryBinding.inflate(inflater, container, false)
 
+        galleryAdapter = GalleryAdapter(viewModel)
+        binding.galleryRecyclerView.adapter = galleryAdapter
+        binding.galleryRecyclerView.setHasFixedSize(true)
+
         viewModel.favoriteData.observe(viewLifecycleOwner) {
             it?.let {
                 Logger.d("favoriteData = $it")
+                galleryAdapter.submitList(it)
             }
         }
 

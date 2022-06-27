@@ -10,8 +10,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">首頁</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_gallery">收藏</string>
     <string name="my_favorite">我的最愛</string>
     <string name="about_me">關於我</string>
 
