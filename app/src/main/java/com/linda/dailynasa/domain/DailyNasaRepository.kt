@@ -16,6 +16,7 @@ interface DailyNasaRepository {
     fun getMarsRoverData2(camera:String): Flow<PagingData<Photo>>
 
     suspend fun insertFavorite(data:Favorite)
+    suspend fun updateFavorite(data:Favorite)
     suspend fun getFavorite(type:String,date: String):Favorite?
     fun getAllFavorite():Flow<List<Favorite>>
     suspend fun removeFavorite(id:Int)

@@ -9,10 +9,11 @@ import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.linda.dailynasa.MobileNavigationDirections
 import com.linda.dailynasa.R
-import com.linda.dailynasa.common.Logger
 import com.linda.dailynasa.databinding.FragmentGalleryDetailBinding
 import com.linda.dailynasa.domain.model.Favorite
 import com.linda.dailynasa.ui.dialog.MessageDialog
@@ -58,7 +59,19 @@ class GalleryDetailFragment : Fragment() {
             }
         }
         binding.deleteButton.setOnClickListener {
-
+            viewModel.favoriteData.value?.let {
+                viewModel.removeFavorite(it)
+            }
+        }
+        binding.saveButton.setOnClickListener {
+            val favorite = viewModel.favoriteData.value?.apply {
+                this.name = binding.titleText.text.toString()
+                this.describe = binding.describeText.text.toString()
+                this.note = binding.noteText.text.toString()
+            }
+            if (favorite != null) {
+                viewModel.updateFavorite(favorite)
+            }
         }
 
         binding.titleText.addTextChangedListener(object :TextWatcher {
@@ -93,10 +106,6 @@ class GalleryDetailFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
         })
-
-        binding.root.setOnClickListener {
-            Logger.v("ccccccc")
-        }
     }
 
     private fun setObserver() {
@@ -114,6 +123,12 @@ class GalleryDetailFragment : Fragment() {
                 binding.deleteButton.visibility = View.VISIBLE
             }
         }
+        viewModel.toGallery.observe(viewLifecycleOwner) {
+            if (it == true) {
+                findNavController().navigate(MobileNavigationDirections.toGalleryPage())
+                viewModel.onNavigated()
+            }
+        }
     }
 
     private fun setUI(data:Favorite) {
@@ -129,7 +144,7 @@ class GalleryDetailFragment : Fragment() {
         binding.titleText.setText(data.name)
         binding.dateText.text = data.date
         binding.describeText.setText(data.describe)
-        binding.noteText.setText("...")
+        binding.noteText.setText(if (data.note != null) data.note else "...")
         viewModel.editChange.value = false
     }
 }

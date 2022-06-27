@@ -66,6 +66,10 @@ class DailyNasaRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateFavorite(data: Favorite) {
+        return localDatabase.updateFavorite(data)
+    }
+
     override suspend fun getFavorite(type: String, date: String): Favorite? {
         return localDatabase.getFavoriteByCondition(type, date)
     }
