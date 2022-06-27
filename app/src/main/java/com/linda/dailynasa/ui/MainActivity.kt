@@ -1,8 +1,13 @@
 package com.linda.dailynasa.ui
 
+import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +22,7 @@ import com.linda.dailynasa.R
 import com.linda.dailynasa.common.CurrentFragmentType
 import com.linda.dailynasa.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -87,6 +93,29 @@ class MainActivity : AppCompatActivity() {
         } else {
             View.GONE
         }
+    }
+
+    fun hideKeyboard(context: Context) {
+        val inputMethodManager =
+            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (currentFocus != null) {
+            hideKeyboard(this)
+            if (ev?.action == MotionEvent.ACTION_DOWN) {
+                val v = currentFocus
+                if (v is EditText) {
+                    val outRect = Rect()
+                    v.getGlobalVisibleRect(outRect)
+                    if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+                        v.clearFocus()
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
