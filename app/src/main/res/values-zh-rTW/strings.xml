@@ -21,6 +21,7 @@
     <string name="mars_rover">火星漫遊者</string>
 
     <string name="confirm">確定</string>
+    <string name="cancel">取消</string>
     <string name="date">日期</string>
 
     <string name="Curiosity">好奇號</string>
@@ -31,4 +32,6 @@
     <string name="rover_name">漫遊者名稱</string>
     <string name="launch_date">發射日期</string>
     <string name="landing_date">著陸日期</string>
+
+    <string name="leave_alarm">你確定要離開嗎? 資料還未儲存</string>
 </resources>
