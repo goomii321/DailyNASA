@@ -1,5 +1,5 @@
 # DailyNASA
- Dem app
+ Demo app
 
 ## Implementaion
 * **Design Patterns**: MVVM, Single activity clean architecture 
@@ -22,6 +22,7 @@
 <img src="https://github.com/goomii321/DailyNASA/blob/main/readme/favorite.png" width="310" height="570"></a> 
 
 ## Note
-You need apikey.properties to successfully execute this app
+You need apikey.properties to successfully execute this app.   
 The file can be downloaded [here](https://drive.google.com/drive/folders/1GymhA5kabIFyAJggEf_Uv9Sgduc31I-6?usp=sharing)
+, then put the file in the root directory.    
 The password is my phone number :)
