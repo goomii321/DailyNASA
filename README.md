@@ -1,5 +1,5 @@
 # DailyNASA
- Demp app
+ Dem app
 
 ## Implementaion
 * **Design Patterns**: MVVM, Single activity clean architecture 
