@@ -2,9 +2,8 @@
  Demp app
 
 ## Implementaion
-* **Language**: Kotlin
 * **Design Patterns**: MVVM, Single activity clean architecture 
-* **Network**: Retrofit
+* **Network**: Retrofit2
 * **Else**: Hilt, Glide, Room, Coroutines
 
 ## Features
