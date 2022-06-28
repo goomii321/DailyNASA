@@ -2,8 +2,8 @@
     <string name="app_name">Daily NASA</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">CHUN YU LAI</string>
+    <string name="nav_header_subtitle" translatable="false">https://github.com/goomii321</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
