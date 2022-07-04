@@ -16,7 +16,7 @@ interface NasaDao {
     @Update
     fun updateFavorite(data: Favorite)
 
-    @Query("SELECT * from Favorite ORDER BY id ASC")
+    @Query("SELECT * from Favorite ORDER BY date DESC")
     fun getFavorite(): Flow<List<Favorite>>
 
     @Query("SELECT * from Favorite WHERE :type = type AND :date = date")
