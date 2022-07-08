@@ -16,24 +16,31 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.linda.dailynasa.R
 import com.linda.dailynasa.common.Constants
+import com.linda.dailynasa.common.Logger
 import com.linda.dailynasa.data.remote.dto.ApodDto
 import com.linda.dailynasa.databinding.FragmentApodBinding
 import com.linda.dailynasa.domain.model.Favorite
 import com.linda.dailynasa.ui.dialog.MessageDialog
 import com.linda.dailynasa.ui.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 
 @AndroidEntryPoint
 class ApodFragment : Fragment() {
 
-    private lateinit var binding:FragmentApodBinding
-    private val viewModel by viewModels<HomeViewModel>({requireParentFragment()})
+    private lateinit var binding: FragmentApodBinding
+    private val viewModel by viewModels<HomeViewModel>({ requireParentFragment() })
+
+    private val job = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + job)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentApodBinding.inflate(inflater,container,false)
+        binding = FragmentApodBinding.inflate(inflater, container, false)
 
         viewModel.getApod("")
 
@@ -59,9 +66,9 @@ class ApodFragment : Fragment() {
     private fun setObserver() {
         viewModel.apodData.observe(viewLifecycleOwner) {
             it?.let {
-                setApodImage(it.url)
                 setApodInfo(it)
-                viewModel.checkFavorite(Constants.APOD,it.date)
+                viewModel.checkFavorite(Constants.APOD, it.date)
+                setApodImage(it.url)
                 viewModel.showLoading(false)
             }
         }
@@ -80,50 +87,56 @@ class ApodFragment : Fragment() {
         }
         viewModel.apodCheckFavorite.observe(viewLifecycleOwner) {
             if (it == true) {
-                viewModel.checkFavorite(Constants.APOD,viewModel.apodData.value!!.date)
+                viewModel.checkFavorite(Constants.APOD, viewModel.apodData.value!!.date)
                 viewModel.apodCheckFavorite.value = null
             }
         }
     }
 
-    private fun setApodImage(url:String) {
+    private fun setApodImage(url: String) {
         viewModel.showLoading(true)
-        binding.apodImg.let {
-            val uri = url.toUri().buildUpon().build()
-            Glide.with(it.context)
-                .load(uri)
-                .listener(object : RequestListener<Drawable>{
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        viewModel.showLoading(false)
-                        return false
-                    }
 
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        viewModel.showLoading(false)
-                        return false
-                    }
-                })
-                .apply (
-                    RequestOptions()
-                        .placeholder(R.drawable.refresh_48px)
-                        .error(R.drawable.broken_image_48px)
-                )
-                .into(it)
+        try {
+            binding.apodImg.let {
+                val uri = url.toUri().buildUpon().build()
+                Glide.with(requireContext())
+                    .load(uri)
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            viewModel.showLoading(false)
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            viewModel.showLoading(false)
+                            return false
+                        }
+                    })
+                    .apply(
+                        RequestOptions()
+                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .placeholder(R.drawable.refresh_48px)
+                            .error(R.drawable.broken_image_48px)
+                    )
+                    .into(it)
+            }
+        } catch (e:Exception) {
+            Logger.e("eeee ${e.message}")
         }
     }
 
-    private fun setApodInfo(data:ApodDto) {
+    private fun setApodInfo(data: ApodDto) {
         binding.apodTitleText.text = data.title
         binding.apodDateText.text = data.date
         binding.explanationText.text = data.explanation
@@ -132,18 +145,20 @@ class ApodFragment : Fragment() {
 
     private fun addFavorite(data: ApodDto) {
         val favorite =
-            Favorite(null,
+            Favorite(
+                null,
                 data.url,
                 data.title,
                 data.explanation,
                 null,
                 Constants.APOD,
-                data.date)
+                data.date
+            )
 
         viewModel.insertFavorite(favorite)
     }
 
-    private fun setErrorDialog(msg:String) {
+    private fun setErrorDialog(msg: String) {
         val rightListener = View.OnClickListener {
             MessageDialog.dialog?.dismiss()
         }
@@ -151,6 +166,6 @@ class ApodFragment : Fragment() {
             message = msg
             leftButtonState = null
             rightButtonState = getString(R.string.confirm)
-        }.setCustomDialog(null,rightListener)
+        }.setCustomDialog(null, rightListener)
     }
 }
