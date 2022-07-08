@@ -31,7 +31,7 @@ object AppModule {
 
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
-            .client(clientBuilder.build())
+//            .client(clientBuilder.build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(NasaApi::class.java)
